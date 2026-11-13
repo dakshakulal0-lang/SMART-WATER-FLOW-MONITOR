@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT Smart Water Meter</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>💧 Smart Water Flow Monitor</h1>
+
+    <div class="container">
+
+        <div class="card">
+            <div class="label">Live Flow Rate</div>
+            <div class="value" id="flow">0.00</div>
+            <div class="unit">Liters / min</div>
+        </div>
+
+        <div class="card">
+            <div class="label">Total Consumption</div>
+            <div class="value" id="total">0.000</div>
+            <div class="unit">Liters</div>
+        </div>
+
+        <button onclick="resetCounter()">
+            Reset Total Volume
+        </button>
+
+    </div>
+
+    <script>
+        setInterval(() => {
+            fetch('/data')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('flow').innerText =
+                    data.flowRate.toFixed(2);
+
+                document.getElementById('total').innerText =
+                    data.totalLiters.toFixed(3);
+            });
+        }, 1000);
+
+        function resetCounter() {
+            fetch('/reset')
+            .then(() => {
+                document.getElementById('total').innerText = "0.000";
+            });
+        }
+    </script>
+
+</body>
+</html>
